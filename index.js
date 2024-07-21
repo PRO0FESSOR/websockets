@@ -12,12 +12,11 @@ app.get('/',(req,res)=>{
     res.sendFile(filePath);
 })
 
-io.on('connection',(socket)=>{
-    console.log("a is connected");
-    socket.on('disconnect',()=>{
-        console.log("a is disconnected");
-    })
-})
+io.on('connection', (socket) => {
+    socket.on('chat message', (msg) => {
+      console.log('message: ' + msg);
+    });
+  });
 
 server.listen(8080,()=>{
     console.log("server started");
