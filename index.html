@@ -17,9 +17,11 @@
     </style>
   </head>
   <body>
+    <div id="connection-state"></div>
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
+      <button id="toggle-btn">Disconnect</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -29,6 +31,8 @@
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
+    const toggleButton = document.getElementById('toggle-btn');
+    const connectionStateElement = document.getElementById('connection-state');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -44,6 +48,23 @@
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
     })
+
+    socket.on('connection state', (data) => {
+            const recoveredState = data.recovered ? 'true' : 'false';
+            console.log(recoveredState);
+            connectionStateElement.textContent = `Connection State: Recovered - ${recoveredState}`;
+        });
+
+  toggleButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (socket.connected) {
+      toggleButton.innerText = 'Connect';
+      socket.disconnect();
+    } else {
+      toggleButton.innerText = 'Disconnect';
+      socket.connect();
+    }
+  });
 
     </script>
 
